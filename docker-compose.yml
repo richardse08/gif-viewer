@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  hiring-fullstack-javascript-exercise:
+    image: hiring-fullstack-javascript-exercise
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./:/src"
+    environment:
+      - PORT=3000
