@@ -1,8 +1,9 @@
 {
-  "name": "hiring-fullstack-javascript-exercise",
-  "version": "0.0.0",
+  "name": "gif-viewer",
+  "version": "2.0.0",
   "scripts": {
     "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "docker-start": "docker-compose up",
     "docker-background": "docker-compose up -d",
     "docker-stop": "docker-compose down",
@@ -13,5 +14,6 @@
   },
   "engines": {
     "node": ">=7.6.0"
-  }
+  },
+  "author": "eric-richards"
 }
