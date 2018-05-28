@@ -1,6 +1,7 @@
 {
   "name": "gif-viewer",
   "version": "2.0.0",
+  "description": "Gif Viewer",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,6 +10,11 @@
     "docker-stop": "docker-compose down",
     "dev": "nodemon index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardse08/gif-viewer.git"
+  },
+  "homepage": "git+https://github.com/richardse08/gif-viewer#readme",
   "dependencies": {
     "express": "^4.15.4"
   },

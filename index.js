@@ -13,14 +13,32 @@ app.listen(port, function () {
 
 // api endpoint for serving a random gif
 app.get("/gif-random", function(request, response) {
-  // get a random number
-  var randomNumber = function(maxNumber) {
-    return Math.floor(Math.random() * Math.floor(maxNumber));
+
+  var randomGifGenerator = function() {
+
+    var fullGifList = fs.readdirSync('./public/gifs'); // list of gifs avail from gifs folder
+    var gifList = []; // after loop this will hold the correct list without ds_store
+
+    // loop through entire fullGifList, if not ds_store pass value into gifList
+    for(var i = 0; i <= fullGifList.length; i++) {
+      // ignore DS_Store
+      if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
+        gifList.push(fullGifList[i])
+      }
+    }
+
+    var randomNumber = function(maxNumber) {
+      return Math.floor(Math.random() * Math.floor(maxNumber));
+    }
+    var randomIndexPosition = randomNumber(gifList.length); // assign a random number from gifs list
+
+    // randomGif.push(gifList[randomIndexPosition]);
+    return gifList[randomIndexPosition];
+    
   }
 
-  var fullGifList = fs.readdirSync('./public/gifs'); // list of gifs avail from gifs folder
-  var randomIndexPosition = randomNumber(fullGifList.length); // assign a random number from full gifs list
-  var randomGif = fullGifList[randomIndexPosition]; // define the random gif
+  // get the randomGif from randomGif function
+  var randomGif = randomGifGenerator();
 
   // create an object to hold onto our random gif
   var responseObject = {
@@ -37,14 +55,14 @@ app.get("/gif-list", function(request, response) {
   var gifsOnPage = function(fullGifList, currentPage) {
     var start = (currentPage - 1) * 10; // create the lower parameter (ie, 0, 10, 20, 30)
     var end = start + 9; // create upper parameter (ie, 9, 19, 29, 39)
-    var gifList = [] // create list to ONLY hold gifs between upper and lower parameter (ie, 0-9, 10-19, etc.)
+    var gifList = []; // create list to ONLY hold gifs between upper and lower parameter (ie, 0-9, 10-19, etc.)
 
     // loop through list of all gifs available and push those that are between upper and lower parameters
     for(var i = start; i <= end; i++) {
       // ignore DS_Store
-      if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
+      // if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
         gifList.push(fullGifList[i])
-      }
+      // }
     }
 
     return gifList;
