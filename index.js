@@ -58,11 +58,17 @@ app.get("/gif-list", function(request, response) {
     var gifList = []; // create list to ONLY hold gifs between upper and lower parameter (ie, 0-9, 10-19, etc.)
 
     // loop through list of all gifs available and push those that are between upper and lower parameters
-    for(var i = start; i <= end; i++) {
-      // ignore DS_Store
-      // if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
+    var pushes = 0;
+    for(var i = start; i <= fullGifList.length; i++) {
+      if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
         gifList.push(fullGifList[i])
-      // }
+        pushes++;
+        console.log(fullGifList.indexOf(fullGifList[i]));
+        if(pushes == 10) {
+          console.log('break fired at ' + pushes);
+          break;
+        }
+      }
     }
 
     return gifList;
