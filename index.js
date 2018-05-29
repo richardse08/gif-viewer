@@ -34,7 +34,6 @@ app.get("/gif-random", function(request, response) {
 
     // randomGif.push(gifList[randomIndexPosition]);
     return gifList[randomIndexPosition];
-    
   }
 
   // get the randomGif from randomGif function
@@ -50,32 +49,38 @@ app.get("/gif-random", function(request, response) {
 
 // api endpoint for sending up 10 gifs
 app.get("/gif-list", function(request, response) {
+
+  // create function that removes .DS_Store when called
+  var removeDS_Store = function() {
+    var filteredGifs = [];
+    for(var i = 0; i <= fullGifList.length; i++) {
+      if(fullGifList[i] && fullGifList[i] == '.DS_Store') {
+        // filteredGifs.push(fullGifList[i])
+        fullGifList.splice(i,1);
+      }
+    }
+    return fullGifList;
+  }
   
-  // assuming page 1 = gifs 0-9, page 2 = gifs 10-19, etc.; create upper and lower parameters
+  // create a function that pulls only the gifs we need
   var gifsOnPage = function(fullGifList, currentPage) {
+    // assuming page 1 = gifs 0-9, page 2 = gifs 10-19, etc.; create upper and lower parameters 
     var start = (currentPage - 1) * 10; // create the lower parameter (ie, 0, 10, 20, 30)
     var end = start + 9; // create upper parameter (ie, 9, 19, 29, 39)
     var gifList = []; // create list to ONLY hold gifs between upper and lower parameter (ie, 0-9, 10-19, etc.)
 
     // loop through list of all gifs available and push those that are between upper and lower parameters
-    var pushes = 0;
-    for(var i = start; i <= fullGifList.length; i++) {
-      if(fullGifList[i] && fullGifList[i] !== '.DS_Store') {
+    for(var i = start; i <= end; i++) {
+      if(fullGifList[i] && fullGifList[i] !== null) {
         gifList.push(fullGifList[i])
-        pushes++;
-        console.log(fullGifList.indexOf(fullGifList[i]));
-        if(pushes == 10) {
-          console.log('break fired at ' + pushes);
-          break;
-        }
       }
     }
-
     return gifList;
   }
 
   var currentPage = request.query.currentPage;
   var fullGifList = fs.readdirSync('./public/gifs'); // list of gifs avail from gifs folder
+  removeDS_Store(); // get rid of .DS_Store once fullGifList has been created (fs will use synchronous mode)
   var gifsOnPage = gifsOnPage(fullGifList, currentPage); // send list of gifs and our current page to gifsOnPage so that it can create the requested 10 gif list list
   var totalPages = Math.ceil(fullGifList.length/10); // divide total gifs by 10 to get decimal # of pages, round up so we have room for an extra page with less than 10 gifs if needed
 
