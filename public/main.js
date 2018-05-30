@@ -3,7 +3,7 @@ $(document).ready(function() {
     var currentPage = 1; // keep track of state of page that user is currently on
     var totalPages; // keep track of the number of pages in case gifs folder changes 
 
-    // create function for showing the loader gif 
+    // create function for showing the loader gif *** this will also hide/show the gif row ***
     function toggleLoader(direction) {
         var loader = $('.js-loader');
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
         }
     }
 
-    // BUTTON DISPLAY CONTROLLER
+    // BUTTON DISPLAY CONTROLLER *** this only changes which buttons are shown in header ***
     function setActiveButton(activeButton) {
         
         // Set all buttons to default
@@ -72,7 +72,7 @@ $(document).ready(function() {
         button.removeClass('btn-default');
     }
 
-    // PAGINATION DISPLAY CONTROL
+    // PAGINATION DISPLAY CONTROL *** this will only hide the ENTIRE pagination section, will not control left and right arrow display ***
     function togglePagination(direction) {
 
         // if direction is ON, then SHOW the pagination
@@ -252,6 +252,8 @@ $(document).ready(function() {
                 return;
             }
         }
+
+        // getAllGifFiles(currentPage);
 
     });
 
