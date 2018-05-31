@@ -164,14 +164,29 @@ $(document).ready(function() {
         }
 
         $('.js-pagination').html(''); // remove the pagination links at the bottom
-        html = backButton(); // start building pagination with a left arrow and add it to html variable
+
+        var html = '';
+
+        if(currentPage == 1) {
+            // do nothing
+        }
+        else {
+            html = backButton(); // start building pagination with a left arrow and add it to html variable
+        }
+        // html = backButton(); // start building pagination with a left arrow and add it to html variable
 
         // loop from the beginning of the pages to show to the end (ie, 1,2,3,4,5) and add that to our html variable
         for(var i = startPage(); i <= endPage(); i++) {
             html += pageLink(i);
         }
 
-        html += nextButton(); // finish the pagination html by adding our next button
+        if (currentPage == totalPages) {
+            // do nothing
+        }
+        else {
+            html += nextButton(); // finish the pagination html by adding our next button
+        }
+        // html += nextButton(); // finish the pagination html by adding our next button
 
         $('.js-pagination').html(html); // finally send the pagination html to the js-pagination target
     };
