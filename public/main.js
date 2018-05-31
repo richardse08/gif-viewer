@@ -116,42 +116,51 @@ $(document).ready(function() {
 
         // write some simple math to control what is first page in pagination UI
         var startPage = function() {
-            
-            // lower band
-            if(currentPage <= 3) {
+            if(totalPages <= 5) {
                 return 1;
             }
+            if(totalPages > 5) {
+                // lower band
+                if(currentPage <= 3) {
+                    return 1;
+                }
 
-            // middle band
-            else if(currentPage >= 4 && currentPage <= totalPages - 2) {
-                return currentPage - 2;
-            }
+                // middle band
+                else if(currentPage >= 4 && currentPage <= totalPages - 2) {
+                    return currentPage - 2;
+                }
 
-            // upper band
-            else if(currentPage >= totalPages - 3) {
-                return totalPages - 4;
+                // upper band
+                else if(currentPage >= totalPages - 3) {
+                    return totalPages - 4;
+                }
+
             }
         }
 
         // write some simple math to control what is last page in pagination UI
         var endPage = function() {
-
-            // lower band
-            if(currentPage <= 3) {
-                return 5;
-            }
-
-            // middle band
-            if(currentPage >= 4 && currentPage <= totalPages - 3) {
-                return currentPage + 2;
-            }
-
-
-            // upper band
-            if(currentPage >= totalPages - 2) {
+            if(totalPages <= 5) {
                 return totalPages;
             }
+            if(totalPages > 5) {
+                // lower band
+                if(currentPage <= 3) {
+                    return 5;
+                }
+
+                // middle band
+                if(currentPage >= 4 && currentPage <= totalPages - 3) {
+                    return currentPage + 2;
+                }
+
+
+                // upper band
+                if(currentPage >= totalPages - 2) {
+                    return totalPages;
+                }
   
+            }
         }
 
         $('.js-pagination').html(''); // remove the pagination links at the bottom
