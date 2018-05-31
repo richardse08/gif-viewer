@@ -88,6 +88,8 @@ $(document).ready(function() {
 
     // PAGINATION FUNCTIONALITY CONTROL
     function pageinationBuilder(currentPage, totalPages) {
+        console.log('totalPages: ' + totalPages);
+        console.log('currentPage: ' + currentPage);
 
         // build button for previous page, no data needed, use jquery data- tool
         var backButton = function() {
@@ -99,11 +101,11 @@ $(document).ready(function() {
             return '<li><a data-next=next" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
         }
 
-        // create button for getting page, will need data here, use jquery data- tool
+        // control which selection in pagination are ACTIVE 
         var pageLink = function(number, active) {
             var className = 'page-item';
 
-            // highlight the page that the user is on (ie, if pages listed in pagination are 1,2,3,4,5 and user is on 3; highlight 3)
+            // add active to the CURRENT page selection, but not to the non-current page selections
             if(number === currentPage) {
                 className += ' active';
             }
@@ -114,20 +116,52 @@ $(document).ready(function() {
 
         // write some simple math to control what is first page in pagination UI
         var startPage = function() {
-            if(currentPage - 2 >= 3) {
-                return currentPage - 2;
+            if(totalPages <= 5) {
+                return 1;
             }
+            if(totalPages > 5) {
+                // lower band
+                if(currentPage <= 3) {
+                    return 1;
+                }
 
-            return 1;
+                // middle band
+                else if(currentPage >= 4 && currentPage <= totalPages - 2) {
+                    return currentPage - 2;
+                }
+
+                // upper band
+                else if(currentPage >= totalPages - 3) {
+                    return totalPages - 4;
+                }
+
+            }
         }
 
         // write some simple math to control what is last page in pagination UI
         var endPage = function() {
-            if(currentPage + 2 < totalPages) {
-                return currentPage + 2;
+            // if we have 5 total pages or less, always return end page as total pages
+            if(totalPages <= 5) {
+                return totalPages;
             }
+            if(totalPages > 5) {
+                // lower band
+                if(currentPage <= 3) {
+                    return 5;
+                }
 
-            return totalPages;
+                // middle band
+                if(currentPage >= 4 && currentPage <= totalPages - 3) {
+                    return currentPage + 2;
+                }
+
+
+                // upper band
+                if(currentPage >= totalPages - 2) {
+                    return totalPages;
+                }
+  
+            }
         }
 
         $('.js-pagination').html(''); // remove the pagination links at the bottom
