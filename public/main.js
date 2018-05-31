@@ -1,7 +1,21 @@
 $(document).ready(function() {
 
     var currentPage = 1; // keep track of state of page that user is currently on
-    var totalPages; // keep track of the number of pages in case gifs folder changes 
+    var totalPages; // keep track of the number of pages in case gifs folder changes
+    document.onkeydown = checkKey; // get key strokes
+
+    // if user clicks left or right arrow, let them sift through pagination
+    function checkKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '37' && currentPage > 1) {
+            currentPage--;
+            getAllGifFiles(currentPage);
+        }
+        else if (e.keyCode == '39' && currentPage < totalPages) {
+            currentPage++;
+            getAllGifFiles(currentPage);
+        }
+    }
 
     // create function for showing the loader gif *** this will also hide/show the gif row ***
     function toggleLoader(direction) {
