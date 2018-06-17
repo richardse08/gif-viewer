@@ -1,4 +1,4 @@
-FROM node:7.7.4
+FROM mhart/alpine-node:8
 WORKDIR /src
 COPY . /src
 RUN npm install
