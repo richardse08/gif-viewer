@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     var currentPage = 1; // keep track of state of page that user is currently on
-    var totalPages; // keep track of the number of pages in case gifs folder changes
+    var totalPages; // keep track of the number of pages in case file count in gif folder changes
     document.onkeydown = checkKey; // get key strokes
 
     // if user clicks left or right arrow, let them sift through pagination
@@ -17,7 +17,7 @@ $(document).ready(function() {
         }
     }
 
-    // create function for showing the loader gif *** this will also hide/show the gif row ***
+    // tooling to show loader gif *** this will also hide/show the gif row ***
     function toggleLoader(direction) {
         var loader = $('.js-loader');
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
         }
     }
 
-    // HIDE / SHOW GIF ROW DISPLAY CONTROL
+    // HIDE / SHOW GIF ROW
     function toggleGifRow(direction) {
         var gifRow = $('.js-gif-row-target');
 
@@ -61,14 +61,12 @@ $(document).ready(function() {
         var setAllToDefault = function() {
             var allButtons = $('.js-button-group a');
             allButtons.addClass('btn-default');
-
             for(var i = 0; i < allButtons.length; i++) {
                 var button = $(allButtons[i]);
                 button.addClass('btn-default');
                 button.removeClass('btn-primary');
             }
         }
-
         setAllToDefault();
 
         // Control which button will have btn primary class
@@ -81,12 +79,11 @@ $(document).ready(function() {
         else {
             button = $('.js-random-gif');
         }
-
         button.addClass('btn-primary');
         button.removeClass('btn-default');
     }
 
-    // PAGINATION DISPLAY CONTROL *** this will only hide the ENTIRE pagination section, will not control left and right arrow display ***
+    // PAGINATION DISPLAY CONTROL *** hide entire pagination when on random or trending mode ***
     function togglePagination(direction) {
 
         // if direction is ON, then SHOW the pagination
@@ -100,35 +97,32 @@ $(document).ready(function() {
         }
     }
 
-    // PAGINATION FUNCTIONALITY CONTROL
+    // PAGINATION FUNCTIONALITY CONTROL *** this will handle what series of page options will show in pagination ***
     function pageinationBuilder(currentPage, totalPages) {
-        console.log('totalPages: ' + totalPages);
-        console.log('currentPage: ' + currentPage);
 
-        // build button for previous page, no data needed, use jquery data- tool
+        // build html button for previous page
         var backButton = function() {
             return '<li><a data-previous=previous" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
         }
 
-        // build button for next page, no data needed, use jquery data- tool
+        // build html button for next page
         var nextButton = function() {
             return '<li><a data-next=next" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
         }
 
         // control which selection in pagination are ACTIVE 
         var pageLink = function(number, active) {
-            var className = 'page-item';
 
-            // add active to the CURRENT page selection, but not to the non-current page selections
+            // add bootstrap active class to the current page selection only
             if(number === currentPage) {
-                className += ' active';
+                var className = ' active';
             }
             
-            // be sure to include the class and the number to be showrn
+            // build html page number to include number of page and active class if selection is current page
             return '<li class="' + className + '"><a data-page-number=' + number + ' href="javascript:void(0)">' + number + '</a></li>';
         }
 
-        // write some simple math to control what is first page in pagination UI
+        // control what is first page in pagination UI
         var startPage = function() {
             if(totalPages <= 5) {
                 return 1;
@@ -152,7 +146,7 @@ $(document).ready(function() {
             }
         }
 
-        // write some simple math to control what is last page in pagination UI
+        // control what is last page in pagination UI
         var endPage = function() {
             if(totalPages <= 5) {
                 return totalPages;
@@ -177,7 +171,8 @@ $(document).ready(function() {
             }
         }
 
-        $('.js-pagination').html(''); // remove the pagination links at the bottom
+        // remove all pagination links 
+        $('.js-pagination').html('');
 
         var html = '';
 
@@ -187,22 +182,20 @@ $(document).ready(function() {
         else {
             html = backButton(); // start building pagination with a left arrow and add it to html variable
         }
-        // html = backButton(); // start building pagination with a left arrow and add it to html variable
 
         // loop from the beginning of the pages to show to the end (ie, 1,2,3,4,5) and add that to our html variable
         for(var i = startPage(); i <= endPage(); i++) {
             html += pageLink(i);
         }
-
         if (currentPage == totalPages) {
             // do nothing
         }
         else {
             html += nextButton(); // finish the pagination html by adding our next button
         }
-        // html += nextButton(); // finish the pagination html by adding our next button
 
-        $('.js-pagination').html(html); // finally send the pagination html to the js-pagination target
+        // finally send the pagination html to the js-pagination target
+        $('.js-pagination').html(html);
     };
 
     // create tool to show the gifs
@@ -211,6 +204,8 @@ $(document).ready(function() {
         // create a variable that builds a single line of html with the file name (src) of the gif
         var gifEntry = function(src) {
             var source = 'gifs/' + src;
+
+            // if isExternal is true, override source with Giphy API URL
             if (isExternal) {
                 source = src;
             }
@@ -218,9 +213,9 @@ $(document).ready(function() {
         }
 
         $('.js-gif-row-target').html(''); // remove the existing static markup but leave it in the dom for clarity sake
-        var html = ''; // initialize a variable to hold all of our single lines of html from gifEntry
+        var html = '';
 
-        // loop through the list of the gifs and add it to the html variable
+        // loop through the list of the gifs, send each to gifEntry() and append the each line of gif entry markup to html variable
         for(var i = 0; i < gifList.length; i++) {
             html += gifEntry(gifList[i]);
         }
@@ -230,18 +225,18 @@ $(document).ready(function() {
     }
 
     function getAllGifFiles(currentPage) {
-        setActiveButton('see-all-gifs');
-        togglePagination('on'); // pass in 'on' as direction to the toggle Pagination function
-        toggleLoader('on'); // pass in 'on' as direction to teh toggle Loader function
+        setActiveButton('see-all-gifs'); // add bootstrap active to See All button
+        togglePagination('on'); // show pagination
+        toggleLoader('on'); // show loader gif
 
         $.get( "/gif-list", {currentPage: currentPage}, function(data) {
             data = JSON.parse(data);
-            gifList = data.gifList;
+            var gifList = data.gifList;
             totalPages = data.totalPages;
             
-            gifBuilder(gifList);
-            pageinationBuilder(currentPage, totalPages);
-            toggleLoader('off'); // pass in 'off' to the toggleLoader
+            gifBuilder(gifList); // create html for gifs
+            pageinationBuilder(currentPage, totalPages); // customize pagination
+            toggleLoader('off'); // hide toggle loader
         });
     }
 
@@ -255,7 +250,7 @@ $(document).ready(function() {
         $.get( "/gif-random", function(data) {
             data = JSON.parse(data);
             gifBuilder(data.gifList); // send our gif to the builder to handle it
-            toggleLoader('off'); // show our loader
+            toggleLoader('off'); // hide toggle loader
         });
     }
 
