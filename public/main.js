@@ -196,7 +196,7 @@ $(document).ready(function() {
 
         // finally send the pagination html to the js-pagination target
         $('.js-pagination').html(html);
-    };
+    }
 
     // create tool to show the gifs
     function gifBuilder(gifList, isExternal) {
